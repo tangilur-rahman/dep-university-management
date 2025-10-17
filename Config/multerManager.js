@@ -1,0 +1,221 @@
+// external modules
+const multer = require("multer");
+const path = require("path");
+
+// for only single-image
+const multerForImg = (filename) => {
+	// File upload folder
+	const UPLOADS_FOLDER =
+		process.env.NODE_ENV !== "production"
+			? path.resolve("../client/public/uploads/profile-img")
+			: "./build/uploads/profile-img";
+
+	// define the storage
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			cb(null, UPLOADS_FOLDER);
+		},
+		filename: (req, file, cb) => {
+			const fileExt = path.extname(file.originalname);
+			const fileName =
+				file.originalname
+					.replace(fileExt, "")
+					.toLowerCase()
+					.split(" ")
+					.join("-") +
+				"-" +
+				Date.now();
+
+			cb(null, fileName + fileExt);
+		}
+	});
+
+	// prepare the final multer upload object
+	let upload = multer({
+		storage: storage,
+		limits: {
+			fileSize: 5000000 // 5MB
+		},
+		fileFilter: (req, file, cb) => {
+			if (file.fieldname === filename) {
+				if (
+					file.mimetype === "image/png" ||
+					file.mimetype === "image/jpg" ||
+					file.mimetype === "image/jpeg"
+				) {
+					cb(null, true);
+				} else {
+					cb(new Error("Only .jpg, .png or .jpeg format allowed!"));
+				}
+			} else {
+				cb(new Error("There was an unknown error!"));
+			}
+		}
+	});
+
+	return upload;
+};
+
+// for all type of files
+const multerForAttachment = (fileName) => {
+	// File upload folder
+	const UPLOADS_FOLDER =
+		process.env.NODE_ENV !== "production"
+			? path.resolve("../client/public/uploads/attachments")
+			: "./build/uploads/attachments";
+
+	// define the storage
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			cb(null, UPLOADS_FOLDER);
+		},
+
+		filename: (req, file, cb) => {
+			const fileExt = path.extname(file.originalname);
+			const fileName =
+				file.originalname
+					.replace(fileExt, "")
+					.toLowerCase()
+					.split(" ")
+					.join("-") +
+				"-" +
+				Date.now();
+
+			cb(null, fileName + fileExt);
+		}
+	});
+
+	// prepare the final multer upload object
+	let upload = multer({
+		storage: storage,
+		limits: {
+			fileSize: 5e7 // 50MB
+		},
+		fileFilter: (req, file, cb) => {
+			if (file.fieldname === fileName) {
+				if (
+					file.mimetype === "image/png" ||
+					file.mimetype === "image/jpg" ||
+					file.mimetype === "image/jpeg" ||
+					file.mimetype === "image/gif" ||
+					file.mimetype === "text/plain" ||
+					file.mimetype === "text/html" ||
+					file.mimetype === "video/mp4" ||
+					file.mimetype === "audio/mpeg" ||
+					file.mimetype === "image/svg+xml" ||
+					file.mimetype ===
+						"application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+					file.mimetype === "application/pdf" ||
+					file.mimetype === "application/ppt" ||
+					file.mimetype === "application/octet-stream" ||
+					file.mimetype === "application/vnd.ms-powerpoint" ||
+					file.mimetype ===
+						"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+				) {
+					cb(null, true);
+				} else {
+					cb(new Error("Invalid file-type!"));
+				}
+			} else {
+				cb(new Error("There was an unknown error!"));
+			}
+		}
+	});
+
+	return upload;
+};
+
+// for changing login-page background-img
+const loginPageBgImgChangeHandler = (filename) => {
+	// File upload folder
+	const UPLOADS_FOLDER =
+		process.env.NODE_ENV !== "production"
+			? path.resolve("../client/public/assets/images")
+			: "./build/assets/images";
+
+	// define the storage
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			cb(null, UPLOADS_FOLDER);
+		},
+		filename: (req, file, cb) => {
+			cb(null, "login-background.jpg");
+		}
+	});
+
+	// prepare the final multer upload object
+	let upload = multer({
+		storage: storage,
+		limits: {
+			fileSize: 5000000 // 5MB
+		},
+		fileFilter: (req, file, cb) => {
+			if (file.fieldname === filename) {
+				if (
+					file.mimetype === "image/png" ||
+					file.mimetype === "image/jpg" ||
+					file.mimetype === "image/jpeg"
+				) {
+					cb(null, true);
+				} else {
+					cb(new Error("Only .jpg, .png or .jpeg format allowed!"));
+				}
+			} else {
+				cb(new Error("There was an unknown error!"));
+			}
+		}
+	});
+
+	return upload;
+};
+
+// for changing login-page background-img
+const mainLogoChangeHandler = (filename) => {
+	// File upload folder
+	const UPLOADS_FOLDER =
+		process.env.NODE_ENV !== "production"
+			? path.resolve("../client/public/assets/logo")
+			: "./build/assets/logo";
+
+	// define the storage
+	const storage = multer.diskStorage({
+		destination: (req, file, cb) => {
+			cb(null, UPLOADS_FOLDER);
+		},
+		filename: (req, file, cb) => {
+			cb(null, "main-logo.png");
+		}
+	});
+
+	// prepare the final multer upload object
+	let upload = multer({
+		storage: storage,
+		limits: {
+			fileSize: 5000000 // 5MB
+		},
+		fileFilter: (req, file, cb) => {
+			if (file.fieldname === filename) {
+				if (
+					file.mimetype === "image/png" ||
+					file.mimetype === "image/jpg" ||
+					file.mimetype === "image/jpeg"
+				) {
+					cb(null, true);
+				} else {
+					cb(new Error("Only .jpg, .png or .jpeg format allowed!"));
+				}
+			} else {
+				cb(new Error("There was an unknown error!"));
+			}
+		}
+	});
+
+	return upload;
+};
+
+module.exports = {
+	multerForImg,
+	multerForAttachment,
+	loginPageBgImgChangeHandler,
+	mainLogoChangeHandler
+};
